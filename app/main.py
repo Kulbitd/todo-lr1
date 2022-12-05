@@ -31,9 +31,13 @@ async def home(request: Request, database: Session = Depends(get_db)):
     return templates.TemplateResponse("index.html", {"request": request, "todos": todos})
 
 @app.post("/add")
-async def todo_add(request: Request, task: str = Form(...), database: Session = Depends(get_db)):
+async def todo_add(request: Request, task: str = Form(default="None"), database: Session = Depends(get_db)):
     """Add new todo
     """
+    if task == "None":
+        return RedirectResponse(url=app.url_path_for("home"), status_code=status.HTTP_303_SEE_OTHER)
+    if len(task) > 500:
+        return RedirectResponse(url=app.url_path_for("home"), status_code=status.HTTP_303_SEE_OTHER)
     todo = models.Todo(task=task)
     logger.info(f"Creating todo: {todo}")
     database.add(todo)
@@ -68,8 +72,11 @@ async def todo_edit(
 async def todo_delete(request: Request, todo_id: int, database: Session = Depends(get_db)):
     """Delete todo
     """
-    todo = database.query(models.Todo).filter(models.Todo.id == todo_id).first()
-    logger.info(f"Deleting todo: {todo}")
-    database.delete(todo)
-    database.commit()
-    return RedirectResponse(url=app.url_path_for("home"), status_code=status.HTTP_303_SEE_OTHER)
+    try:
+        todo = database.query(models.Todo).filter(models.Todo.id == todo_id).first()
+        logger.info(f"Deleting todo: {todo}")
+        database.delete(todo)
+        database.commit()
+        return RedirectResponse(url=app.url_path_for("home"), status_code=status.HTTP_303_SEE_OTHER)
+    except Exception:
+        return RedirectResponse(url=app.url_path_for("home"), status_code=status.HTTP_303_SEE_OTHER)
