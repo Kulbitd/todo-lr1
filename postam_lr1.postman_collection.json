@@ -1,0 +1,99 @@
+{
+	"info": {
+		"_postman_id": "54b4798c-e4e1-4b6b-87a2-a825731fedad",
+		"name": "postam_lr1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "home",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{lr1}}",
+					"host": [
+						"{{lr1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "task",
+							"value": "124",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{lr1}}add",
+					"host": [
+						"{{lr1}}add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "task",
+							"value": "12321",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{lr1}}edit/1",
+					"host": [
+						"{{lr1}}edit"
+					],
+					"path": [
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{lr1}}delete/1",
+					"host": [
+						"{{lr1}}delete"
+					],
+					"path": [
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
