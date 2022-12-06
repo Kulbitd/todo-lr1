@@ -4,8 +4,14 @@ WORKDIR /code
 
 COPY ./requirements.txt /code/requirements.txt
 
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+ARG PROXY
 
+RUN if [-z "$PROXY"]; then \
+        pip install --no-cache-dir --upgrade -r /code/requirements.txt; \
+    else \
+        pip install --proxy "$PROXY" --no-cache-dir --upgrade -r /code/requirements.txt; \
+    fi
+   
 COPY ./app /code/app
 
 WORKDIR /code/app
