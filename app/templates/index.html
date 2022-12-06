@@ -30,10 +30,10 @@
 
                     {% else %}
                     <label for="completed"> Выполнено </label>
-                    <input type =checkbox name="completed" onclick="window.location.href = 'complete/{{ todo.id }}'"
+                    <input type =checkbox name="completed" onclick="window.location.href = 'uncomplete/{{ todo.id }}'"
                     {% if todo.completed %} checked{% endif %}>
                     <label for="uncompleted"> Не выполнено </label>
-                    <input type =checkbox name="uncompleted" onclick="window.location.href = 'complete/{{ todo.id }}'"
+                    <input type =checkbox name="uncompleted" onclick="window.location.href = 'uncomplete/{{ todo.id }}'"
                     {% if todo.completed == False %} checked{% endif %}>
                     {% endif %}
                     <a href="edit/{{ todo.id }}">Редактировать</a>
