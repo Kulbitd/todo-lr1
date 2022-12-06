@@ -24,7 +24,15 @@
                     <a href="delete/{{ todo.id }}">Удалить</a>
                 </small>
             </div>
-        {% endfor %}
-    </div>
+    {% endfor %}
+            </div>
+            <form>
+                Страницы:
+                {% for i in range(pages) %}
+                    <a rel = {{ i }}
+                            {% if i==page%}style="color:red;" {% endif%}
+                             href="/?limit={{ limit }}&skip={{ i }}" > {{ i }}</a>
+                    {% endfor %}
+            </form>
 
 {% endblock content %}

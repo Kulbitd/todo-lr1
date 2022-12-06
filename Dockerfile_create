@@ -1,4 +1,4 @@
-FROM todo-lr1
+FROM 2020-4-11-lr1
 
 RUN apt-get update && apt-get install curl -y && rm -rf /var/lib/apt/lists/*
 

@@ -1,8 +1,11 @@
 """Main of todo app
 """
+
+import math
+
 from loguru import logger
 
-from fastapi import FastAPI, Request, Depends, Form, status
+from fastapi import FastAPI, Request, Depends, Form, status, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -23,12 +26,19 @@ logger = logger.opt(colors=True)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
-async def home(request: Request, database: Session = Depends(get_db)):
+async def home(request: Request, database: Session = Depends(get_db), limit: int = 15, skip: int = 0):
     """Main page with todo list
     """
     logger.info("In home")
     todos = database.query(models.Todo).order_by(models.Todo.id.desc())
-    return templates.TemplateResponse("index.html", {"request": request, "todos": todos})
+
+    count = database.query(models.Todo).count()
+    pages = math.ceil(count / limit)
+
+    if skip > pages:
+        raise HTTPException(status_code=status.HTTP_303_SEE_OTHER)
+
+    return templates.TemplateResponse("index.html", {"request": request, "todos": todos, "page": skip, "pages": pages, "limit": limit})
 
 @app.post("/add")
 async def todo_add(request: Request, title: str = Form(default="None"), database: Session = Depends(get_db)):
