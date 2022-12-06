@@ -40,6 +40,25 @@ async def home(request: Request, database: Session = Depends(get_db), limit: int
 
     return templates.TemplateResponse("index.html", {"request": request, "todos": todos, "page": skip, "pages": pages, "limit": limit})
 
+
+@app.get("/complete/{todo_id}")
+async def todo_add(todo_id: int, database: Session = Depends(get_db)):
+    todo = database.query(models.Todo).filter(models.Todo.id == todo_id).first()
+    logger.info(f"Complete: {todo}")
+    todo.completed = True
+    database.commit()
+    return RedirectResponse(url=app.url_path_for("home"), status_code=status.HTTP_303_SEE_OTHER)
+
+
+@app.get("/uncomplete/{todo_id}")
+async def todo_add(todo_id: int, database: Session = Depends(get_db)):
+    todo = database.query(models.Todo).filter(models.Todo.id == todo_id).first()
+    logger.info(f"Uncomplete: {todo}")
+    todo.completed = False
+    database.commit()
+    return RedirectResponse(url=app.url_path_for("home"), status_code=status.HTTP_303_SEE_OTHER)
+
+
 @app.post("/add")
 async def todo_add(request: Request, title: str = Form(default="None"), database: Session = Depends(get_db)):
     """Add new todo
@@ -55,6 +74,7 @@ async def todo_add(request: Request, title: str = Form(default="None"), database
     database.commit()
     return RedirectResponse(url=app.url_path_for("home"), status_code=status.HTTP_303_SEE_OTHER)
 
+
 @app.get("/edit/{todo_id}")
 async def todo_get(request: Request, todo_id: int, database: Session = Depends(get_db)):
     """Get todo
@@ -62,6 +82,7 @@ async def todo_get(request: Request, todo_id: int, database: Session = Depends(g
     todo = database.query(models.Todo).filter(models.Todo.id == todo_id).first()
     logger.info(f"Getting todo: {todo}")
     return templates.TemplateResponse("edit.html", {"request": request, "todo": todo})
+
 
 @app.post("/edit/{todo_id}")
 async def todo_edit(
