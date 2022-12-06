@@ -9,7 +9,13 @@
         <textarea name="task" rows="5">{{ todo.task }}</textarea>
         <label for="completed">Выполнено?</label>
         <input type="checkbox" name="completed" {% if todo.completed %}checked{% endif %}>
-
+        <select name="tag">
+        {% for tag in tags %}
+        <option {%   if todo.tag==tag.value %} selected{% endif %} value="{{ tag.value }}">
+        {{ tag.value }}
+        </option>
+        {% endfor %}
+        </select>
         <button type="submit">Сохранить</button>
     </form>
 {% endblock content %}

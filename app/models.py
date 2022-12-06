@@ -1,5 +1,6 @@
 """Todo models
 """
+from enum import Enum
 from sqlalchemy import Column, Integer, Boolean, Text
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -13,6 +14,11 @@ class Todo(Base):
     task = Column(Text)
     title = Column(Text)
     completed = Column(Boolean, default=False)
+
+class Tags(str, Enum):
+    studies = "studies"
+    personal = "personal"
+    plans = "plans"
 
     def __repr__(self):
         return f'<Todo {self.id}>'
