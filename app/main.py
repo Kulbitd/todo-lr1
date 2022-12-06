@@ -60,7 +60,7 @@ async def todo_add(todo_id: int, database: Session = Depends(get_db)):
 
 
 @app.post("/add")
-async def todo_add(request: Request, title: str = Form(default="None"), database: Session = Depends(get_db)):
+async def todo_add(request: Request, title: str = Form(default="None"), task: str = Form(default="0 details"), database: Session = Depends(get_db)):
     """Add new todo
     """
     if title == "None":
@@ -68,9 +68,9 @@ async def todo_add(request: Request, title: str = Form(default="None"), database
     if len(title) > 500:
         return RedirectResponse(url=app.url_path_for("home"), status_code=status.HTTP_303_SEE_OTHER)
 
-    title_ = models.Todo(title=title)
-    logger.info(f"Creating todo: {title_}")
-    database.add(title_)
+    todo = models.Todo(task=task, title = title)
+    logger.info(f"Creating todo: {todo}")
+    database.add(todo)
     database.commit()
     return RedirectResponse(url=app.url_path_for("home"), status_code=status.HTTP_303_SEE_OTHER)
 
@@ -88,6 +88,7 @@ async def todo_get(request: Request, todo_id: int, database: Session = Depends(g
 async def todo_edit(
         request: Request,
         todo_id: int,
+        task: str = Form(...),
         title: str = Form(...),
         completed: bool = Form(False),
         database: Session = Depends(get_db)):
@@ -95,6 +96,7 @@ async def todo_edit(
     """
     todo = database.query(models.Todo).filter(models.Todo.id == todo_id).first()
     logger.info(f"Editting todo: {todo}")
+    todo.task = task
     todo.title = title
     todo.completed = completed
     database.commit()
