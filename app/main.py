@@ -36,6 +36,8 @@ async def todo_add(request: Request, task: str = Form(default="None"), database:
     """
     if task == "None":
         return RedirectResponse(url=app.url_path_for("home"), status_code=status.HTTP_303_SEE_OTHER)
+    if len(task) > 500:
+        return RedirectResponse(url=app.url_path_for("home"), status_code=status.HTTP_303_SEE_OTHER)
     todo = models.Todo(task=task)
     logger.info(f"Creating todo: {todo}")
     database.add(todo)
