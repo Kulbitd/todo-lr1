@@ -14,6 +14,7 @@ class Todo(Base):
     task = Column(Text)
     title = Column(Text)
     completed = Column(Boolean, default=False)
+    tag = Column(Text, default="plans")
 
 class Tags(str, Enum):
     studies = "studies"

@@ -80,8 +80,15 @@ async def todo_get(request: Request, todo_id: int, database: Session = Depends(g
     """Get todo
     """
     todo = database.query(models.Todo).filter(models.Todo.id == todo_id).first()
-    logger.info(f"Getting todo: {todo}")
-    return templates.TemplateResponse("edit.html", {"request": request, "todo": todo, "tags": models.Tags})
+    todo_list = database.query(models.Todo)
+    maintag = todo.tag
+    count = 0
+    logger.info(f"Editting todo: {todo}")
+    for todos in todo_list:
+        if todos.tag == maintag:
+            count += 1
+    logger.info(f"Getting todo: {count}")
+    return templates.TemplateResponse("edit.html", {"request": request, "todo": todo, "tags": models.Tags, "count": count})
 
 
 @app.post("/edit/{todo_id}")
@@ -96,7 +103,6 @@ async def todo_edit(
     """Edit todo
     """
     todo = database.query(models.Todo).filter(models.Todo.id == todo_id).first()
-    logger.info(f"Editting todo: {todo}")
     todo.task = task
     todo.title = title
     todo.completed = completed
